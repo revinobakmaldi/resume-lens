@@ -21,7 +21,7 @@ def supabase_request(path, method="GET", data=None, single=False):
     else:
         headers["Accept"] = "application/json"
 
-    if method == "POST":
+    if method in ("POST", "PATCH"):
         headers["Prefer"] = "return=representation"
 
     body = json.dumps(data).encode("utf-8") if data else None
@@ -88,10 +88,12 @@ class handler(BaseHTTPRequestHandler):
                 self._send_error(400, "job_id is required")
                 return
 
+            email = data.get("email")
+
             candidate_data = {
                 "job_id": job_id,
                 "name": data.get("name"),
-                "email": data.get("email"),
+                "email": email,
                 "phone": data.get("phone"),
                 "gender": data.get("gender"),
                 "age": data.get("age"),
@@ -104,8 +106,25 @@ class handler(BaseHTTPRequestHandler):
                 "pdf_filename": data.get("pdf_filename"),
             }
 
-            result = supabase_request("candidates", method="POST", data=candidate_data)
-            self._send_json(201, result[0] if isinstance(result, list) else result)
+            # Check for existing candidate with same email in the same job
+            existing = None
+            if email:
+                matches = supabase_request(
+                    f"candidates?job_id=eq.{job_id}&email=eq.{urllib.parse.quote(email)}"
+                )
+                if matches:
+                    existing = matches[0]
+
+            if existing:
+                # Update existing candidate with latest info
+                update_fields = {k: v for k, v in candidate_data.items() if k != "job_id"}
+                result = supabase_request(
+                    f"candidates?id=eq.{existing['id']}", method="PATCH", data=update_fields
+                )
+                self._send_json(200, result[0] if isinstance(result, list) else result)
+            else:
+                result = supabase_request("candidates", method="POST", data=candidate_data)
+                self._send_json(201, result[0] if isinstance(result, list) else result)
 
         except json.JSONDecodeError:
             self._send_error(400, "Invalid JSON")
