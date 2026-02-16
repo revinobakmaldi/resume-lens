@@ -57,6 +57,16 @@ export default function JobDetailPage() {
     load();
   }, [jobId]);
 
+  // Warn before refresh/close while scoring is in progress
+  useEffect(() => {
+    if (!scoring) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [scoring]);
+
   const handleScore = async () => {
     setScoring(true);
     setError(null);
