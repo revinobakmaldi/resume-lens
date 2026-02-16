@@ -45,8 +45,9 @@ export default function CandidateDetailPage() {
     setDeleting(true);
     try {
       await deleteCandidate(candidateId);
-      if (candidate?.job_id) {
-        router.push(`/jobs/${candidate.job_id}`);
+      const jobIds = candidate?.job_ids;
+      if (jobIds && jobIds.length === 1) {
+        router.push(`/jobs/${jobIds[0]}`);
       } else {
         router.push("/candidates");
       }
@@ -97,8 +98,8 @@ export default function CandidateDetailPage() {
         >
           <Link
             href={
-              candidate.job_id
-                ? `/jobs/${candidate.job_id}`
+              candidate.job_ids && candidate.job_ids.length === 1
+                ? `/jobs/${candidate.job_ids[0]}`
                 : "/candidates"
             }
             className="mb-4 inline-flex items-center gap-1.5 text-sm text-zinc-600 dark:text-zinc-400 transition-colors hover:text-primary"

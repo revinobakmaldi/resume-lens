@@ -22,7 +22,6 @@ export function CandidateForm({ candidate }: CandidateFormProps) {
   const [lastCompany, setLastCompany] = useState(candidate.last_company ?? "");
   const [totalExperience, setTotalExperience] = useState(candidate.total_experience?.toString() ?? "");
   const [relatedExperience, setRelatedExperience] = useState(candidate.related_experience?.toString() ?? "");
-  const [source, setSource] = useState(candidate.source ?? "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -43,7 +42,6 @@ export function CandidateForm({ candidate }: CandidateFormProps) {
         last_company: lastCompany.trim() || null,
         total_experience: totalExperience ? Number(totalExperience) : null,
         related_experience: relatedExperience ? Number(relatedExperience) : null,
-        source: source.trim() || null,
       });
       router.push(`/candidates/${candidate.id}`);
     } catch (err) {
@@ -104,10 +102,6 @@ export function CandidateForm({ candidate }: CandidateFormProps) {
         <div>
           <label className="mb-1 block text-sm font-medium text-foreground">Related Experience (years)</label>
           <input type="number" step="0.5" value={relatedExperience} onChange={(e) => setRelatedExperience(e.target.value)} placeholder="e.g. 2" className={inputClass} />
-        </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-foreground">Source</label>
-          <input type="text" value={source} onChange={(e) => setSource(e.target.value)} placeholder="e.g. LinkedIn, Referral" className={inputClass} />
         </div>
       </div>
 

@@ -37,8 +37,8 @@ export function CandidateDetail({ candidate }: CandidateDetailProps) {
       label: "Related Experience",
       value: candidate.related_experience != null ? `${candidate.related_experience} years` : null,
     },
-    { icon: FileText, label: "Source", value: candidate.source },
-    { icon: FileText, label: "PDF File", value: candidate.pdf_filename },
+    { icon: FileText, label: "Source", value: (candidate as Record<string, unknown>).source as string | null },
+    { icon: FileText, label: "PDF File", value: (candidate as Record<string, unknown>).pdf_filename as string | null },
   ];
 
   return (

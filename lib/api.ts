@@ -57,7 +57,7 @@ export async function getCandidate(id: string): Promise<CandidateWithScore> {
   return request(`/api/candidates?id=${id}`);
 }
 
-export async function createCandidate(candidate: Partial<Candidate>): Promise<Candidate> {
+export async function createCandidate(candidate: Partial<Candidate> & { job_id: string; source?: string | null; pdf_filename?: string | null }): Promise<CandidateWithScore> {
   return request("/api/candidates", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

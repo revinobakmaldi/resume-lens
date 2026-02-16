@@ -17,7 +17,6 @@ export interface Criterion {
 
 export interface Candidate {
   id: string;
-  job_id: string;
   name: string | null;
   email: string | null;
   phone: string | null;
@@ -27,9 +26,7 @@ export interface Candidate {
   last_company: string | null;
   total_experience: number | null;
   related_experience: number | null;
-  source: string | null;
   raw_text: string | null;
-  pdf_filename: string | null;
   created_at: string;
 }
 
@@ -44,6 +41,12 @@ export interface Score {
 
 export interface CandidateWithScore extends Candidate {
   score?: Score;
+  // From junction table — present when fetched by job_id
+  job_id?: string;
+  source?: string | null;
+  pdf_filename?: string | null;
+  // Present when fetching single candidate
+  job_ids?: string[];
 }
 
 export interface ParsedCandidate {

@@ -236,8 +236,11 @@ class handler(BaseHTTPRequestHandler):
                 self._send_error(400, "Job has no scoring criteria or requirements defined")
                 return
 
-            # Fetch candidates for this job
-            candidates = supabase_request(f"candidates?job_id=eq.{job_id}")
+            # Fetch candidates for this job via junction table
+            links = supabase_request(
+                f"job_candidates?job_id=eq.{job_id}&select=candidate_id,candidates(*)"
+            )
+            candidates = [link["candidates"] for link in (links or [])]
 
             if not candidates:
                 self._send_error(400, "No candidates found for this job")
