@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowLeft, Loader2, AlertCircle, Pencil, Trash2 } from "lucide-react";
+import { ArrowLeft, Loader2, AlertCircle, Pencil, Trash2, Briefcase } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/shared/navbar";
@@ -11,8 +11,8 @@ import { Footer } from "@/components/shared/footer";
 import { AuthGuard } from "@/components/shared/auth-guard";
 import { CandidateDetail } from "@/components/candidates/candidate-detail";
 import { fadeInUp } from "@/lib/animations";
-import { getCandidate, deleteCandidate } from "@/lib/api";
-import type { CandidateWithScore } from "@/lib/types";
+import { getCandidate, getJob, deleteCandidate } from "@/lib/api";
+import type { CandidateWithScore, Job } from "@/lib/types";
 
 export default function CandidateDetailPage() {
   const params = useParams();
@@ -20,6 +20,7 @@ export default function CandidateDetailPage() {
   const candidateId = params.id as string;
 
   const [candidate, setCandidate] = useState<CandidateWithScore | null>(null);
+  const [linkedJobs, setLinkedJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,6 +30,13 @@ export default function CandidateDetailPage() {
       try {
         const data = await getCandidate(candidateId);
         setCandidate(data);
+        // Fetch job details for all linked jobs
+        if (data.job_ids && data.job_ids.length > 0) {
+          const jobs = await Promise.all(
+            data.job_ids.map((jid) => getJob(jid).catch(() => null))
+          );
+          setLinkedJobs(jobs.filter((j): j is Job => j !== null));
+        }
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to load candidate"
@@ -137,6 +145,37 @@ export default function CandidateDetailPage() {
             </div>
           </div>
         </motion.div>
+
+        {/* Linked Jobs */}
+        {linkedJobs.length > 0 && (
+          <motion.div
+            variants={fadeInUp}
+            initial="hidden"
+            animate="visible"
+            className="mb-6 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-5"
+          >
+            <h3 className="mb-3 text-sm font-semibold text-foreground">
+              Linked Jobs
+              <span className="ml-2 text-xs font-normal text-zinc-500">
+                ({linkedJobs.length})
+              </span>
+            </h3>
+            <div className="space-y-2">
+              {linkedJobs.map((job) => (
+                <Link
+                  key={job.id}
+                  href={`/jobs/${job.id}`}
+                  className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/30"
+                >
+                  <Briefcase className="h-4 w-4 shrink-0 text-primary" />
+                  <span className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+                    {job.title}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
         <CandidateDetail candidate={candidate} />
       </main>
