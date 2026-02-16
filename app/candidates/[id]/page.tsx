@@ -53,12 +53,7 @@ export default function CandidateDetailPage() {
     setDeleting(true);
     try {
       await deleteCandidate(candidateId);
-      const jobIds = candidate?.job_ids;
-      if (jobIds && jobIds.length === 1) {
-        router.push(`/jobs/${jobIds[0]}`);
-      } else {
-        router.push("/candidates");
-      }
+      router.back();
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to delete candidate"
@@ -104,17 +99,13 @@ export default function CandidateDetailPage() {
           animate="visible"
           className="mb-8"
         >
-          <Link
-            href={
-              candidate.job_ids && candidate.job_ids.length === 1
-                ? `/jobs/${candidate.job_ids[0]}`
-                : "/candidates"
-            }
+          <button
+            onClick={() => router.back()}
             className="mb-4 inline-flex items-center gap-1.5 text-sm text-zinc-600 dark:text-zinc-400 transition-colors hover:text-primary"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             Back
-          </Link>
+          </button>
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-3xl font-bold">
