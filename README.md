@@ -11,8 +11,8 @@ AI-powered resume parser and candidate scorer. Upload PDF resumes, extract struc
 
 - **PDF Resume Parsing** — Upload PDF resumes and extract structured candidate data (name, email, education, experience, etc.) using LLM
 - **Bilingual Support** — Handles both Indonesian and English resumes
-- **Job Management** — Create job positions with customizable scoring criteria (field, operator, value, weight)
-- **Weighted Scoring** — Score candidates against job requirements with a weighted algorithm that supports numeric comparisons, education ranking, and string matching
+- **Job Management** — Create job positions with technical requirements and customizable scoring criteria
+- **Hybrid Scoring** — 60% user-defined criteria (numeric comparisons, education ranking, string matching) + 40% AI relevance (LLM evaluates resume against technical requirements)
 - **Candidate Search** — Browse, search, and filter candidates across all jobs
 - **Bulk Upload** — Upload multiple PDFs at once with real-time progress tracking
 - **Dark Mode** — Automatic dark/light theme based on system preference
@@ -55,6 +55,7 @@ CREATE TABLE jobs (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT NOT NULL,
   description TEXT,
+  requirements TEXT NOT NULL,
   criteria JSONB NOT NULL DEFAULT '[]',
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()
@@ -127,11 +128,11 @@ resumelens/
 
 ## How It Works
 
-1. **Create a Job** — Define a position with scoring criteria (e.g., "Total Experience >= 3 years, weight 40%")
+1. **Create a Job** — Define a position with technical requirements (e.g., "Proficient in Python, SQL, Tableau") and scoring criteria (e.g., "Total Experience >= 3 years, weight 40%")
 2. **Upload Resumes** — Drop PDF files; each is parsed by PyPDF2 for text extraction, then sent to an LLM to extract structured fields
 3. **Review Candidates** — Browse parsed candidate data in a searchable table
-4. **Calculate Scores** — Run the scoring engine to rank candidates against job criteria
-5. **Compare** — View ranked candidates with score breakdowns per criterion
+4. **Calculate Scores** — Run the scoring engine which combines user-defined criteria (60%) with AI relevance matching against technical requirements (40%)
+5. **Compare** — View ranked candidates with score breakdowns per criterion plus AI relevance score
 
 ## Deployment
 

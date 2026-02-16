@@ -168,7 +168,7 @@ export default function JobDetailPage() {
                 </p>
               )}
               <p className="mt-1 text-xs text-zinc-500">
-                Created {formatDate(job.created_at)}
+                Created {formatDate(job.created_at)} · Scoring: 60% criteria + 40% AI relevance
               </p>
             </div>
             <button
@@ -181,6 +181,26 @@ export default function JobDetailPage() {
           </div>
         </motion.div>
 
+        {/* Requirements */}
+        {job.requirements && (
+          <motion.div
+            variants={fadeInUp}
+            initial="hidden"
+            animate="visible"
+            className="mb-6 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-5"
+          >
+            <h3 className="mb-3 text-sm font-semibold text-foreground">
+              Technical Requirements
+              <span className="ml-2 text-xs font-normal text-zinc-500">
+                (40% of score — AI-evaluated)
+              </span>
+            </h3>
+            <p className="whitespace-pre-wrap text-sm text-zinc-600 dark:text-zinc-400">
+              {job.requirements}
+            </p>
+          </motion.div>
+        )}
+
         {/* Criteria */}
         {job.criteria.length > 0 && (
           <motion.div
@@ -191,6 +211,9 @@ export default function JobDetailPage() {
           >
             <h3 className="mb-3 text-sm font-semibold text-foreground">
               Scoring Criteria
+              <span className="ml-2 text-xs font-normal text-zinc-500">
+                (60% of score)
+              </span>
             </h3>
             <div className="space-y-2">
               {job.criteria.map((c, i) => (

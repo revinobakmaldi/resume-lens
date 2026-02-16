@@ -27,7 +27,7 @@ export async function getJob(id: string): Promise<Job> {
   return request(`/api/jobs?id=${id}`);
 }
 
-export async function createJob(job: { title: string; description?: string; criteria: Job["criteria"] }): Promise<Job> {
+export async function createJob(job: { title: string; description?: string; requirements: string; criteria: Job["criteria"] }): Promise<Job> {
   return request("/api/jobs", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

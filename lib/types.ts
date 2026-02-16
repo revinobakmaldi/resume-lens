@@ -2,6 +2,7 @@ export interface Job {
   id: string;
   title: string;
   description: string | null;
+  requirements: string;
   criteria: Criterion[];
   created_at: string;
   updated_at: string;

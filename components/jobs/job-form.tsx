@@ -12,13 +12,14 @@ import type { Criterion } from "@/lib/types";
 export function JobForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [requirements, setRequirements] = useState("");
   const [criteria, setCriteria] = useState<Criterion[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const totalWeight = criteria.reduce((sum, c) => sum + (c.weight || 0), 0);
-  const isValid = title.trim() && criteria.length > 0 && totalWeight === 100;
+  const isValid = title.trim() && requirements.trim() && criteria.length > 0 && totalWeight === 100;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +32,7 @@ export function JobForm() {
       const job = await createJob({
         title: title.trim(),
         description: description.trim() || undefined,
+        requirements: requirements.trim(),
         criteria,
       });
       router.push(`/jobs/${job.id}`);
@@ -73,6 +75,22 @@ export function JobForm() {
           rows={3}
           className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2.5 text-foreground placeholder:text-zinc-400 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary resize-none"
         />
+      </div>
+
+      <div>
+        <label className="mb-1 block text-sm font-medium text-foreground">
+          Technical Requirements
+        </label>
+        <textarea
+          value={requirements}
+          onChange={(e) => setRequirements(e.target.value)}
+          placeholder="e.g. Proficient in Python and SQL, experience with data visualization tools (Tableau/Power BI), knowledge of statistical modeling, familiarity with cloud platforms (AWS/GCP)..."
+          rows={5}
+          className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2.5 text-foreground placeholder:text-zinc-400 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary resize-none"
+        />
+        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+          AI will evaluate each candidate&apos;s resume against these requirements (40% of total score).
+        </p>
       </div>
 
       <CriteriaBuilder criteria={criteria} onChange={setCriteria} />

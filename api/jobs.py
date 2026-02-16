@@ -65,9 +65,15 @@ class handler(BaseHTTPRequestHandler):
                 self._send_error(400, "Title is required")
                 return
 
+            requirements = data.get("requirements", "")
+            if not requirements:
+                self._send_error(400, "Technical requirements are required")
+                return
+
             job_data = {
                 "title": title,
                 "description": data.get("description", ""),
+                "requirements": requirements,
                 "criteria": data.get("criteria", []),
             }
 
