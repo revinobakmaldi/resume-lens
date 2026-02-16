@@ -196,7 +196,7 @@ Score this candidate's fit against the technical requirements."""
         method="POST",
     )
 
-    with urllib.request.urlopen(req, timeout=30) as resp:
+    with urllib.request.urlopen(req, timeout=60) as resp:
         data = json.loads(resp.read().decode("utf-8"))
 
     content = data["choices"][0]["message"]["content"].strip()
@@ -209,7 +209,25 @@ Score this candidate's fit against the technical requirements."""
             lines = lines[:-1]
         content = "\n".join(lines).strip()
 
-    result = json.loads(content)
+    # Extract JSON object if surrounded by extra text
+    start = content.find("{")
+    end = content.rfind("}")
+    if start != -1 and end != -1:
+        content = content[start:end + 1]
+
+    try:
+        result = json.loads(content)
+    except json.JSONDecodeError:
+        # Try to repair truncated JSON
+        repaired = content
+        if repaired.count('"') % 2 != 0:
+            repaired += '"'
+        if repaired.rstrip().endswith(":"):
+            repaired += " 0"
+        open_braces = repaired.count("{") - repaired.count("}")
+        repaired += "}" * open_braces
+        result = json.loads(repaired)
+
     score = int(result.get("score", 0))
     return max(0, min(100, score))
 
@@ -298,8 +316,9 @@ class handler(BaseHTTPRequestHandler):
                     description,
                     requirements,
                 )
-            except Exception:
+            except Exception as e:
                 ai_score = 0
+                breakdown["ai_error"] = str(e)[:100]
 
         breakdown["ai_relevance"] = ai_score
 
