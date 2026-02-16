@@ -416,6 +416,7 @@ export default function JobDetailPage() {
 
           <CandidateTable
             candidates={sortedCandidates}
+            experienceField="related_experience"
             selectedIds={selectedIds}
             onToggleSelect={handleToggleSelect}
             onToggleAll={handleToggleAll}

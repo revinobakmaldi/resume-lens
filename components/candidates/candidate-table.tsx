@@ -10,12 +10,13 @@ import type { CandidateWithScore } from "@/lib/types";
 interface CandidateTableProps {
   candidates: CandidateWithScore[];
   showJobLink?: boolean;
+  experienceField?: "total_experience" | "related_experience";
   selectedIds?: Set<string>;
   onToggleSelect?: (id: string) => void;
   onToggleAll?: () => void;
 }
 
-export function CandidateTable({ candidates, showJobLink, selectedIds, onToggleSelect, onToggleAll }: CandidateTableProps) {
+export function CandidateTable({ candidates, showJobLink, experienceField = "total_experience", selectedIds, onToggleSelect, onToggleAll }: CandidateTableProps) {
   const selectable = !!selectedIds && !!onToggleSelect && !!onToggleAll;
   const allSelected = selectable && candidates.length > 0 && candidates.every((c) => selectedIds!.has(c.id));
   if (candidates.length === 0) {
@@ -56,7 +57,7 @@ export function CandidateTable({ candidates, showJobLink, selectedIds, onToggleS
               Education
             </th>
             <th className="px-4 py-3 text-left font-medium text-zinc-600 dark:text-zinc-400">
-              Experience
+              {experienceField === "related_experience" ? "Related Exp." : "Experience"}
             </th>
             <th className="px-4 py-3 text-left font-medium text-zinc-600 dark:text-zinc-400">
               Company
@@ -105,8 +106,8 @@ export function CandidateTable({ candidates, showJobLink, selectedIds, onToggleS
                 {candidate.last_education || "—"}
               </td>
               <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
-                {candidate.total_experience != null
-                  ? `${candidate.total_experience}y`
+                {candidate[experienceField] != null
+                  ? `${candidate[experienceField]}y`
                   : "—"}
               </td>
               <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
