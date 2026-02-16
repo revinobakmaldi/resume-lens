@@ -47,6 +47,8 @@ export interface CandidateWithScore extends Candidate {
   pdf_filename?: string | null;
   // Present when fetching single candidate
   job_ids?: string[];
+  // Present on all-candidates view — job title of the highest score
+  score_job_title?: string;
 }
 
 export interface ParsedCandidate {

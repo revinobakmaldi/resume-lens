@@ -46,6 +46,11 @@ export function CandidateTable({ candidates, showJobLink }: CandidateTableProps)
             <th className="px-4 py-3 text-left font-medium text-zinc-600 dark:text-zinc-400">
               Company
             </th>
+            {showJobLink && (
+              <th className="px-4 py-3 text-left font-medium text-zinc-600 dark:text-zinc-400">
+                Job
+              </th>
+            )}
             <th className="px-4 py-3 text-left font-medium text-zinc-600 dark:text-zinc-400">
               Score
             </th>
@@ -82,6 +87,20 @@ export function CandidateTable({ candidates, showJobLink }: CandidateTableProps)
               <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
                 {candidate.last_company || "—"}
               </td>
+              {showJobLink && (
+                <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
+                  {candidate.score_job_title ? (
+                    <Link
+                      href={`/jobs/${candidate.score?.job_id}`}
+                      className="hover:text-primary transition-colors"
+                    >
+                      {candidate.score_job_title}
+                    </Link>
+                  ) : (
+                    <span className="text-zinc-400">—</span>
+                  )}
+                </td>
+              )}
               <td className="px-4 py-3">
                 {candidate.score ? (
                   <ScoreBadge score={candidate.score.total_score} size="sm" />

@@ -37,8 +37,10 @@ def supabase_request(path, method="GET", data=None, single=False, extra_headers=
         return json.loads(resp_body)
 
 
-def get_scores_for_candidates(candidate_ids, job_id=None):
-    """Fetch scores for a list of candidate IDs, optionally filtered by job."""
+def get_scores_for_candidates(candidate_ids, job_id=None, highest=False):
+    """Fetch scores for a list of candidate IDs, optionally filtered by job.
+    If highest=True, returns only the highest score per candidate across all jobs.
+    """
     if not candidate_ids:
         return {}
     ids_filter = ",".join(candidate_ids)
@@ -46,6 +48,13 @@ def get_scores_for_candidates(candidate_ids, job_id=None):
     if job_id:
         path += f"&job_id=eq.{job_id}"
     scores = supabase_request(path)
+    if highest:
+        best = {}
+        for s in scores:
+            cid = s["candidate_id"]
+            if cid not in best or s.get("total_score", 0) > best[cid].get("total_score", 0):
+                best[cid] = s
+        return best
     return {s["candidate_id"]: s for s in scores}
 
 
@@ -105,11 +114,29 @@ class handler(BaseHTTPRequestHandler):
                 # All candidates (deduplicated — one row per person)
                 candidates = supabase_request("candidates?order=created_at.desc")
 
-                # Attach scores (latest per candidate)
+                # Attach highest score per candidate across all jobs
                 ids = [c["id"] for c in candidates]
-                scores = get_scores_for_candidates(ids)
+                scores = get_scores_for_candidates(ids, highest=True)
+
+                # Collect job_ids from highest scores to fetch job titles
+                score_job_ids = set()
+                for s in scores.values():
+                    if s.get("job_id"):
+                        score_job_ids.add(s["job_id"])
+
+                job_titles = {}
+                if score_job_ids:
+                    jobs_filter = ",".join(score_job_ids)
+                    jobs = supabase_request(
+                        f"jobs?id=in.({jobs_filter})&select=id,title"
+                    )
+                    job_titles = {j["id"]: j["title"] for j in jobs}
+
                 for c in candidates:
-                    c["score"] = scores.get(c["id"])
+                    score = scores.get(c["id"])
+                    c["score"] = score
+                    if score and score.get("job_id"):
+                        c["score_job_title"] = job_titles.get(score["job_id"])
 
                 self._send_json(200, candidates)
 
