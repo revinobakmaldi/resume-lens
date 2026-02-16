@@ -15,10 +15,20 @@ AI_WEIGHT = 40        # 40% from LLM relevance match
 
 EDUCATION_RANK = {
     "high school": 1,
+    "sma": 1,
+    "smk": 1,
     "diploma": 2,
+    "d3": 2,
+    "d4": 3,
     "bachelor": 3,
+    "s1": 3,
+    "sarjana": 3,
     "master": 4,
+    "s2": 4,
+    "magister": 4,
     "phd": 5,
+    "s3": 5,
+    "doktor": 5,
 }
 
 

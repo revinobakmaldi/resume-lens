@@ -2,7 +2,7 @@
 
 import { Plus, Trash2 } from "lucide-react";
 import type { Criterion } from "@/lib/types";
-import { CANDIDATE_FIELDS, OPERATORS } from "@/lib/constants";
+import { CANDIDATE_FIELDS, OPERATORS, EDUCATION_LEVELS } from "@/lib/constants";
 
 interface CriteriaBuilderProps {
   criteria: Criterion[];
@@ -55,7 +55,7 @@ export function CriteriaBuilder({ criteria, onChange }: CriteriaBuilderProps) {
         >
           <select
             value={criterion.field}
-            onChange={(e) => updateCriterion(index, { field: e.target.value })}
+            onChange={(e) => updateCriterion(index, { field: e.target.value, value: "" })}
             className="rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-2 py-1.5 text-sm text-foreground"
           >
             {CANDIDATE_FIELDS.map((f) => (
@@ -81,13 +81,28 @@ export function CriteriaBuilder({ criteria, onChange }: CriteriaBuilderProps) {
             ))}
           </select>
 
-          <input
-            type="text"
-            value={criterion.value}
-            onChange={(e) => updateCriterion(index, { value: e.target.value })}
-            placeholder="Value"
-            className="w-24 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-2 py-1.5 text-sm text-foreground placeholder:text-zinc-400"
-          />
+          {criterion.field === "last_education" ? (
+            <select
+              value={criterion.value}
+              onChange={(e) => updateCriterion(index, { value: e.target.value })}
+              className="rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-2 py-1.5 text-sm text-foreground"
+            >
+              <option value="">Select level</option>
+              {EDUCATION_LEVELS.map((level) => (
+                <option key={level} value={level}>
+                  {level}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input
+              type="text"
+              value={criterion.value}
+              onChange={(e) => updateCriterion(index, { value: e.target.value })}
+              placeholder="Value"
+              className="w-24 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-2 py-1.5 text-sm text-foreground placeholder:text-zinc-400"
+            />
+          )}
 
           <div className="flex items-center gap-1">
             <input
