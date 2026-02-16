@@ -34,7 +34,7 @@ RULES:
 3. For experience, calculate from work history dates if available
 4. For related_experience, estimate based on job titles and descriptions relevance
 5. If a field cannot be determined, use null
-6. For age, calculate from birth date if available, otherwise null
+6. For age, calculate from birth date if available. If no birth date, estimate from education start year — assume Bachelor/S1 starts at age 18 (e.g. if S1 started in 2018, birth year ≈ 2000, age in 2026 ≈ 26). Use the earliest university/S1/D3/D4 enrollment year found. Return null only if neither birth date nor education dates are available
 7. Gender can sometimes be inferred from Indonesian names or pronouns, but use null if uncertain"""
 
 
