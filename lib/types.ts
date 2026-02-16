@@ -49,6 +49,8 @@ export interface CandidateWithScore extends Candidate {
   job_ids?: string[];
   // Present on all-candidates view — job title of the highest score
   score_job_title?: string;
+  // Present on single candidate view — scores per linked job
+  job_scores?: (Score & { job_title?: string })[];
 }
 
 export interface ParsedCandidate {

@@ -9,7 +9,9 @@ import {
   Building2,
   Clock,
   FileText,
+  Briefcase,
 } from "lucide-react";
+import Link from "next/link";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 import { ScoreBadge } from "./score-badge";
 import type { CandidateWithScore } from "@/lib/types";
@@ -48,34 +50,47 @@ export function CandidateDetail({ candidate }: CandidateDetailProps) {
       animate="visible"
       className="space-y-6"
     >
-      {/* Score */}
-      {candidate.score && (
+      {/* Scores by Job */}
+      {candidate.job_scores && candidate.job_scores.length > 0 && (
         <motion.div
           variants={fadeInUp}
           className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6"
         >
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-foreground">Overall Score</h3>
-            <ScoreBadge score={candidate.score.total_score} size="lg" />
-          </div>
-          {Object.keys(candidate.score.breakdown).length > 0 && (
-            <div className="mt-4 space-y-2">
-              <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase">
-                Breakdown
-              </p>
-              {Object.entries(candidate.score.breakdown).map(([field, score]) => (
-                <div
-                  key={field}
-                  className="flex items-center justify-between text-sm"
-                >
-                  <span className="text-zinc-600 dark:text-zinc-400 capitalize">
-                    {field.replace(/_/g, " ")}
-                  </span>
-                  <ScoreBadge score={score as number} size="sm" />
+          <h3 className="mb-4 font-semibold text-foreground">Scores by Job</h3>
+          <div className="space-y-4">
+            {candidate.job_scores.map((js) => (
+              <div
+                key={js.id}
+                className="rounded-lg bg-zinc-50 dark:bg-zinc-800/30 p-4"
+              >
+                <div className="flex items-center justify-between">
+                  <Link
+                    href={`/jobs/${js.job_id}`}
+                    className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
+                  >
+                    <Briefcase className="h-3.5 w-3.5 text-primary" />
+                    {js.job_title || "Unknown Job"}
+                  </Link>
+                  <ScoreBadge score={js.total_score} size="lg" />
                 </div>
-              ))}
-            </div>
-          )}
+                {js.breakdown && Object.keys(js.breakdown).length > 0 && (
+                  <div className="mt-3 space-y-1.5">
+                    {Object.entries(js.breakdown).map(([field, score]) => (
+                      <div
+                        key={field}
+                        className="flex items-center justify-between text-sm"
+                      >
+                        <span className="text-zinc-600 dark:text-zinc-400 capitalize">
+                          {field.replace(/_/g, " ")}
+                        </span>
+                        <ScoreBadge score={score as number} size="sm" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </motion.div>
       )}
 

@@ -81,9 +81,31 @@ class handler(BaseHTTPRequestHandler):
                 if links:
                     candidate["source"] = links[0].get("source")
                     candidate["pdf_filename"] = links[0].get("pdf_filename")
-                # Attach score (latest)
-                scores = get_scores_for_candidates([candidate_id])
-                candidate["score"] = scores.get(candidate_id)
+
+                # Fetch all scores for this candidate across jobs
+                all_scores = supabase_request(
+                    f"scores?candidate_id=eq.{candidate_id}&order=total_score.desc"
+                )
+                # Fetch job titles for scored jobs
+                score_job_ids = set(s["job_id"] for s in all_scores if s.get("job_id"))
+                job_titles = {}
+                if score_job_ids:
+                    jobs_filter = ",".join(score_job_ids)
+                    jobs = supabase_request(
+                        f"jobs?id=in.({jobs_filter})&select=id,title"
+                    )
+                    job_titles = {j["id"]: j["title"] for j in jobs}
+
+                # Build job_scores array with job title
+                job_scores = []
+                for s in all_scores:
+                    s["job_title"] = job_titles.get(s["job_id"])
+                    job_scores.append(s)
+                candidate["job_scores"] = job_scores
+
+                # Keep top score as primary for backward compat
+                candidate["score"] = all_scores[0] if all_scores else None
+
                 self._send_json(200, candidate)
 
             elif job_id:
