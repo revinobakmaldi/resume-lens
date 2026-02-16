@@ -1,6 +1,7 @@
 from http.server import BaseHTTPRequestHandler
 import json
 import os
+import time
 import urllib.request
 import urllib.parse
 
@@ -186,18 +187,30 @@ Score this candidate's fit against the technical requirements."""
         "max_tokens": 256,
     }).encode("utf-8")
 
-    req = urllib.request.Request(
-        "https://openrouter.ai/api/v1/chat/completions",
-        data=payload,
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        },
-        method="POST",
-    )
-
-    with urllib.request.urlopen(req, timeout=60) as resp:
-        data = json.loads(resp.read().decode("utf-8"))
+    # Retry with backoff for rate limiting (429)
+    last_err = None
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(
+                "https://openrouter.ai/api/v1/chat/completions",
+                data=payload,
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+                },
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+            break
+        except urllib.error.HTTPError as e:
+            last_err = e
+            if e.code == 429 and attempt < 2:
+                time.sleep(3 * (attempt + 1))
+                continue
+            raise
+    else:
+        raise last_err
 
     content = data["choices"][0]["message"]["content"].strip()
 
