@@ -64,7 +64,7 @@ def call_llm(resume_text):
         raise ValueError("OPENROUTER_API_KEY not configured")
 
     payload = json.dumps({
-        "model": "openai/gpt-oss-120b:free",
+        "model": "qwen/qwen3-vl-235b-a22b-thinking",
         "messages": [
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": f"Parse this resume:\n\n{resume_text[:8000]}"},

@@ -178,7 +178,7 @@ CANDIDATE RESUME:
 Score this candidate's fit against the technical requirements."""
 
     payload = json.dumps({
-        "model": "openai/gpt-oss-120b:free",
+        "model": "qwen/qwen3-vl-235b-a22b-thinking",
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
