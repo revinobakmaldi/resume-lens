@@ -148,7 +148,7 @@ export default function JobDetailPage() {
       } else if (f.field === "source") {
         fieldValue = c.source;
       } else {
-        fieldValue = (c as Record<string, unknown>)[f.field] as string | number | null;
+        fieldValue = (c as unknown as Record<string, unknown>)[f.field] as string | number | null;
       }
 
       if (fieldValue == null) return false;
