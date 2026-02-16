@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Briefcase, Users, ChevronRight } from "lucide-react";
+import { Briefcase, Users, ChevronRight, Pencil } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { fadeInUp } from "@/lib/animations";
 import { formatDate } from "@/lib/utils";
 import type { Job } from "@/lib/types";
@@ -13,6 +14,14 @@ interface JobCardProps {
 }
 
 export function JobCard({ job, candidateCount }: JobCardProps) {
+  const router = useRouter();
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push(`/jobs/${job.id}/edit`);
+  };
+
   return (
     <motion.div variants={fadeInUp}>
       <Link
@@ -44,7 +53,15 @@ export function JobCard({ job, candidateCount }: JobCardProps) {
             </div>
           </div>
         </div>
-        <ChevronRight className="h-5 w-5 text-zinc-400 transition-transform group-hover:translate-x-1 group-hover:text-primary" />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleEdit}
+            className="rounded-lg border border-zinc-200 dark:border-zinc-700 p-1.5 text-zinc-400 transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+          </button>
+          <ChevronRight className="h-5 w-5 text-zinc-400 transition-transform group-hover:translate-x-1 group-hover:text-primary" />
+        </div>
       </Link>
     </motion.div>
   );

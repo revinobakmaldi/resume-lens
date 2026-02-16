@@ -4,16 +4,22 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Loader2, AlertCircle } from "lucide-react";
 import { fadeInUp } from "@/lib/animations";
-import { createJob } from "@/lib/api";
+import { createJob, updateJob } from "@/lib/api";
 import { CriteriaBuilder } from "./criteria-builder";
 import { useRouter } from "next/navigation";
-import type { Criterion } from "@/lib/types";
+import type { Criterion, Job } from "@/lib/types";
 
-export function JobForm() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [requirements, setRequirements] = useState("");
-  const [criteria, setCriteria] = useState<Criterion[]>([]);
+interface JobFormProps {
+  initialData?: Job;
+  jobId?: string;
+}
+
+export function JobForm({ initialData, jobId }: JobFormProps) {
+  const isEdit = !!jobId;
+  const [title, setTitle] = useState(initialData?.title ?? "");
+  const [description, setDescription] = useState(initialData?.description ?? "");
+  const [requirements, setRequirements] = useState(initialData?.requirements ?? "");
+  const [criteria, setCriteria] = useState<Criterion[]>(initialData?.criteria ?? []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -29,15 +35,25 @@ export function JobForm() {
     setError(null);
 
     try {
-      const job = await createJob({
-        title: title.trim(),
-        description: description.trim() || undefined,
-        requirements: requirements.trim(),
-        criteria,
-      });
-      router.push(`/jobs/${job.id}`);
+      if (isEdit) {
+        await updateJob(jobId, {
+          title: title.trim(),
+          description: description.trim() || undefined,
+          requirements: requirements.trim(),
+          criteria,
+        });
+        router.push(`/jobs/${jobId}`);
+      } else {
+        const job = await createJob({
+          title: title.trim(),
+          description: description.trim() || undefined,
+          requirements: requirements.trim(),
+          criteria,
+        });
+        router.push(`/jobs/${job.id}`);
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create job");
+      setError(err instanceof Error ? err.message : isEdit ? "Failed to update job" : "Failed to create job");
     } finally {
       setLoading(false);
     }
@@ -114,10 +130,10 @@ export function JobForm() {
         {loading ? (
           <span className="flex items-center justify-center gap-2">
             <Loader2 className="h-4 w-4 animate-spin" />
-            Creating...
+            {isEdit ? "Updating..." : "Creating..."}
           </span>
         ) : (
-          "Create Job"
+          isEdit ? "Update Job" : "Create Job"
         )}
       </button>
     </motion.form>

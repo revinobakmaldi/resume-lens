@@ -35,6 +35,14 @@ export async function createJob(job: { title: string; description?: string; requ
   });
 }
 
+export async function updateJob(id: string, data: { title?: string; description?: string; requirements?: string; criteria?: Job["criteria"] }): Promise<Job> {
+  return request(`/api/jobs?id=${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
 export async function deleteJob(id: string): Promise<{ success: boolean }> {
   return request(`/api/jobs?id=${id}`, { method: "DELETE" });
 }
