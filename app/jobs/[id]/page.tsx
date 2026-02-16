@@ -80,10 +80,10 @@ export default function JobDetailPage() {
   };
 
   const handleToggleAll = () => {
-    if (selectedIds.size === sortedCandidates.length) {
+    if (selectedIds.size === filteredCandidates.length) {
       setSelectedIds(new Set());
     } else {
-      setSelectedIds(new Set(sortedCandidates.map((c) => c.id)));
+      setSelectedIds(new Set(filteredCandidates.map((c) => c.id)));
     }
   };
 
@@ -165,13 +165,6 @@ export default function JobDetailPage() {
     }
 
     return true;
-  });
-
-  // Sort by score descending if scores exist
-  const sortedCandidates = [...filteredCandidates].sort((a, b) => {
-    const scoreA = a.score?.total_score ?? -1;
-    const scoreB = b.score?.total_score ?? -1;
-    return scoreB - scoreA;
   });
 
   const getFieldLabel = (field: string) =>
@@ -399,8 +392,8 @@ export default function JobDetailPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-foreground">
-              Candidates ({sortedCandidates.length !== candidates.length
-                ? `${sortedCandidates.length} / ${candidates.length}`
+              Candidates ({filteredCandidates.length !== candidates.length
+                ? `${filteredCandidates.length} / ${candidates.length}`
                 : candidates.length})
             </h2>
           </div>
@@ -415,7 +408,7 @@ export default function JobDetailPage() {
           )}
 
           <CandidateTable
-            candidates={sortedCandidates}
+            candidates={filteredCandidates}
             experienceField="related_experience"
             selectedIds={selectedIds}
             onToggleSelect={handleToggleSelect}
