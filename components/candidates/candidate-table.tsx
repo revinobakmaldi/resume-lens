@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { Pencil } from "lucide-react";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 import { ScoreBadge } from "./score-badge";
 import type { CandidateWithScore } from "@/lib/types";
@@ -48,6 +49,8 @@ export function CandidateTable({ candidates, showJobLink }: CandidateTableProps)
             <th className="px-4 py-3 text-left font-medium text-zinc-600 dark:text-zinc-400">
               Score
             </th>
+            <th className="px-4 py-3 text-left font-medium text-zinc-600 dark:text-zinc-400">
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -85,6 +88,14 @@ export function CandidateTable({ candidates, showJobLink }: CandidateTableProps)
                 ) : (
                   <span className="text-zinc-400">—</span>
                 )}
+              </td>
+              <td className="px-4 py-3">
+                <Link
+                  href={`/candidates/${candidate.id}/edit`}
+                  className="inline-flex rounded-lg border border-zinc-200 dark:border-zinc-700 p-1.5 text-zinc-400 transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                </Link>
               </td>
             </motion.tr>
           ))}

@@ -134,6 +134,44 @@ class handler(BaseHTTPRequestHandler):
         except Exception as e:
             self._send_error(500, str(e))
 
+    def do_PATCH(self):
+        try:
+            parsed = urllib.parse.urlparse(self.path)
+            params = urllib.parse.parse_qs(parsed.query)
+            candidate_id = params.get("id", [None])[0]
+
+            if not candidate_id:
+                self._send_error(400, "Missing candidate id")
+                return
+
+            content_length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(content_length)
+            data = json.loads(body.decode("utf-8"))
+
+            allowed = {
+                "name", "email", "phone", "gender", "age",
+                "last_education", "last_company",
+                "total_experience", "related_experience", "source",
+            }
+            update_data = {k: v for k, v in data.items() if k in allowed}
+
+            if not update_data:
+                self._send_error(400, "No valid fields to update")
+                return
+
+            result = supabase_request(
+                f"candidates?id=eq.{candidate_id}", method="PATCH", data=update_data
+            )
+            self._send_json(200, result[0] if isinstance(result, list) else result)
+
+        except json.JSONDecodeError:
+            self._send_error(400, "Invalid JSON")
+        except urllib.error.HTTPError as e:
+            error_body = e.read().decode("utf-8", errors="replace")
+            self._send_error(e.code, error_body[:200])
+        except Exception as e:
+            self._send_error(500, str(e))
+
     def do_DELETE(self):
         try:
             parsed = urllib.parse.urlparse(self.path)

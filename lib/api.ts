@@ -65,6 +65,14 @@ export async function createCandidate(candidate: Partial<Candidate>): Promise<Ca
   });
 }
 
+export async function updateCandidate(id: string, data: Partial<Candidate>): Promise<Candidate> {
+  return request(`/api/candidates?id=${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
 export async function deleteCandidate(id: string): Promise<{ success: boolean }> {
   return request(`/api/candidates?id=${id}`, { method: "DELETE" });
 }
