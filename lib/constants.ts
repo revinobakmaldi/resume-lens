@@ -29,3 +29,29 @@ export const SOURCE_OPTIONS = [
   "Company Website",
   "Other",
 ] as const;
+
+export const FILTER_FIELDS = [
+  { value: "total_experience", label: "Total Experience", type: "number" },
+  { value: "related_experience", label: "Related Experience", type: "number" },
+  { value: "age", label: "Age", type: "number" },
+  { value: "score", label: "Score", type: "number" },
+  { value: "last_education", label: "Education", type: "select", options: EDUCATION_LEVELS },
+  { value: "gender", label: "Gender", type: "select", options: ["Male", "Female"] as const },
+  { value: "source", label: "Source", type: "select", options: SOURCE_OPTIONS },
+  { value: "last_company", label: "Company", type: "text" },
+] as const;
+
+export const FILTER_OPERATORS = {
+  number: [
+    { value: "gte", label: ">=" },
+    { value: "lte", label: "<=" },
+    { value: "eq", label: "=" },
+  ],
+  select: [
+    { value: "eq", label: "is" },
+  ],
+  text: [
+    { value: "contains", label: "contains" },
+    { value: "eq", label: "is" },
+  ],
+} as const;

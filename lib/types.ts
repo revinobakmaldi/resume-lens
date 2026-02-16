@@ -53,6 +53,13 @@ export interface CandidateWithScore extends Candidate {
   job_scores?: (Score & { job_title?: string })[];
 }
 
+export interface QueryFilter {
+  id: string;
+  field: string;
+  operator: string;
+  value: string;
+}
+
 export interface ParsedCandidate {
   name: string | null;
   email: string | null;

@@ -24,7 +24,7 @@ import { fadeInUp, staggerContainer, scaleIn } from "@/lib/animations";
 import { getJob, getCandidates, scoreCandidate, deleteJob } from "@/lib/api";
 import { formatDate } from "@/lib/utils";
 import { CANDIDATE_FIELDS, OPERATORS } from "@/lib/constants";
-import type { Job, CandidateWithScore } from "@/lib/types";
+import type { Job, CandidateWithScore, QueryFilter } from "@/lib/types";
 
 export default function JobDetailPage() {
   const params = useParams();
@@ -34,6 +34,7 @@ export default function JobDetailPage() {
   const [job, setJob] = useState<Job | null>(null);
   const [candidates, setCandidates] = useState<CandidateWithScore[]>([]);
   const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState<QueryFilter[]>([]);
   const [loading, setLoading] = useState(true);
   const [scoring, setScoring] = useState(false);
   const [scoreProgress, setScoreProgress] = useState({ current: 0, total: 0, name: "" });
@@ -127,13 +128,43 @@ export default function JobDetailPage() {
   };
 
   const filteredCandidates = candidates.filter((c) => {
-    if (!search) return true;
-    const q = search.toLowerCase();
-    return (
-      c.name?.toLowerCase().includes(q) ||
-      c.email?.toLowerCase().includes(q) ||
-      c.last_company?.toLowerCase().includes(q)
-    );
+    // Text search
+    if (search) {
+      const q = search.toLowerCase();
+      const matchesSearch =
+        c.name?.toLowerCase().includes(q) ||
+        c.email?.toLowerCase().includes(q) ||
+        c.last_company?.toLowerCase().includes(q);
+      if (!matchesSearch) return false;
+    }
+
+    // Query filters
+    for (const f of filters) {
+      if (!f.value) continue; // skip empty filters
+
+      let fieldValue: string | number | null | undefined;
+      if (f.field === "score") {
+        fieldValue = c.score?.total_score ?? null;
+      } else if (f.field === "source") {
+        fieldValue = c.source;
+      } else {
+        fieldValue = (c as Record<string, unknown>)[f.field] as string | number | null;
+      }
+
+      if (fieldValue == null) return false;
+
+      if (f.operator === "gte") {
+        if (Number(fieldValue) < Number(f.value)) return false;
+      } else if (f.operator === "lte") {
+        if (Number(fieldValue) > Number(f.value)) return false;
+      } else if (f.operator === "eq") {
+        if (String(fieldValue).toLowerCase() !== String(f.value).toLowerCase()) return false;
+      } else if (f.operator === "contains") {
+        if (!String(fieldValue).toLowerCase().includes(String(f.value).toLowerCase())) return false;
+      }
+    }
+
+    return true;
   });
 
   // Sort by score descending if scores exist
@@ -368,12 +399,19 @@ export default function JobDetailPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-foreground">
-              Candidates ({candidates.length})
+              Candidates ({sortedCandidates.length !== candidates.length
+                ? `${sortedCandidates.length} / ${candidates.length}`
+                : candidates.length})
             </h2>
           </div>
 
           {candidates.length > 0 && (
-            <CandidateFilters search={search} onSearchChange={setSearch} />
+            <CandidateFilters
+              search={search}
+              onSearchChange={setSearch}
+              filters={filters}
+              onFiltersChange={setFilters}
+            />
           )}
 
           <CandidateTable
