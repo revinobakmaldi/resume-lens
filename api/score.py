@@ -177,7 +177,7 @@ CANDIDATE RESUME:
 Score this candidate's fit against the technical requirements."""
 
     payload = json.dumps({
-        "model": "openai/gpt-4.1-nano:free",
+        "model": "openai/gpt-oss-120b:free",
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
