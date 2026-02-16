@@ -17,7 +17,7 @@ SYSTEM_PROMPT = """You are a resume/CV parser. Extract structured information fr
 
 Return ONLY valid JSON with these exact keys:
 {
-  "name": "Full name or null",
+  "name": "Full name in Proper Case (e.g. 'John Doe', not 'JOHN DOE' or 'john doe') or null",
   "email": "Email address or null",
   "phone": "Phone number or null",
   "gender": "Male/Female or null if not determinable",
@@ -186,6 +186,10 @@ class handler(BaseHTTPRequestHandler):
 
             # Parse with LLM
             parsed = call_llm(raw_text)
+
+            # Ensure name is in Proper Case
+            if parsed.get("name") and isinstance(parsed["name"], str):
+                parsed["name"] = parsed["name"].title()
 
             # Include raw text and filename in response
             parsed["raw_text"] = raw_text
