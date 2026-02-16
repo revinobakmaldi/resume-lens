@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, Loader2, AlertCircle } from "lucide-react";
 import Link from "next/link";
-import { AnimatedBackground } from "@/components/shared/animated-background";
 import { Navbar } from "@/components/shared/navbar";
 import { Footer } from "@/components/shared/footer";
 import { AuthGuard } from "@/components/shared/auth-guard";
@@ -37,7 +36,6 @@ export default function UploadPage() {
   if (loading) {
     return (
       <AuthGuard>
-        <AnimatedBackground />
         <Navbar />
         <main className="flex min-h-[60vh] items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -50,7 +48,6 @@ export default function UploadPage() {
   if (!job) {
     return (
       <AuthGuard>
-        <AnimatedBackground />
         <Navbar />
         <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
           <div className="flex items-center gap-2 rounded-lg bg-red-500/10 px-4 py-3 text-red-400">
@@ -65,7 +62,6 @@ export default function UploadPage() {
 
   return (
     <AuthGuard>
-      <AnimatedBackground />
       <Navbar />
       <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
         <motion.div

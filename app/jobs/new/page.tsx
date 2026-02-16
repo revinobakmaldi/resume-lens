@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { AnimatedBackground } from "@/components/shared/animated-background";
 import { Navbar } from "@/components/shared/navbar";
 import { Footer } from "@/components/shared/footer";
 import { AuthGuard } from "@/components/shared/auth-guard";
@@ -13,7 +12,6 @@ import { fadeInUp } from "@/lib/animations";
 export default function NewJobPage() {
   return (
     <AuthGuard>
-      <AnimatedBackground />
       <Navbar />
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
         <motion.div
