@@ -20,7 +20,7 @@ import { AuthGuard } from "@/components/shared/auth-guard";
 import { CandidateTable } from "@/components/candidates/candidate-table";
 import { CandidateFilters } from "@/components/candidates/candidate-filters";
 import { fadeInUp, staggerContainer, scaleIn } from "@/lib/animations";
-import { getJob, getCandidates, calculateScores, deleteJob } from "@/lib/api";
+import { getJob, getCandidates, scoreCandidate, deleteJob } from "@/lib/api";
 import { formatDate } from "@/lib/utils";
 import { CANDIDATE_FIELDS, OPERATORS } from "@/lib/constants";
 import type { Job, CandidateWithScore } from "@/lib/types";
@@ -35,6 +35,7 @@ export default function JobDetailPage() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [scoring, setScoring] = useState(false);
+  const [scoreProgress, setScoreProgress] = useState({ current: 0, total: 0, name: "" });
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -59,8 +60,15 @@ export default function JobDetailPage() {
   const handleScore = async () => {
     setScoring(true);
     setError(null);
+    const total = candidates.length;
+    setScoreProgress({ current: 0, total, name: "" });
+
     try {
-      await calculateScores(jobId);
+      for (let i = 0; i < candidates.length; i++) {
+        const c = candidates[i];
+        setScoreProgress({ current: i + 1, total, name: c.name || "Unknown" });
+        await scoreCandidate(jobId, c.id);
+      }
       // Reload candidates with new scores
       const updated = await getCandidates(jobId);
       setCandidates(updated);
@@ -68,6 +76,7 @@ export default function JobDetailPage() {
       setError(err instanceof Error ? err.message : "Failed to calculate scores");
     } finally {
       setScoring(false);
+      setScoreProgress({ current: 0, total: 0, name: "" });
     }
   };
 
@@ -269,6 +278,32 @@ export default function JobDetailPage() {
             </button>
           </motion.div>
         </motion.div>
+
+        {/* Scoring Progress */}
+        {scoring && scoreProgress.total > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-4"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm text-foreground">
+                Scoring <span className="font-medium">{scoreProgress.name}</span>
+              </p>
+              <p className="text-xs text-zinc-500">
+                {scoreProgress.current} / {scoreProgress.total}
+              </p>
+            </div>
+            <div className="h-2 w-full rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
+              <motion.div
+                className="h-full rounded-full bg-primary"
+                initial={{ width: 0 }}
+                animate={{ width: `${(scoreProgress.current / scoreProgress.total) * 100}%` }}
+                transition={{ duration: 0.3 }}
+              />
+            </div>
+          </motion.div>
+        )}
 
         {error && (
           <motion.div

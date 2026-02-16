@@ -222,6 +222,8 @@ class handler(BaseHTTPRequestHandler):
             data = json.loads(body.decode("utf-8"))
 
             job_id = data.get("job_id")
+            candidate_id = data.get("candidate_id")
+
             if not job_id:
                 self._send_error(400, "job_id is required")
                 return
@@ -236,64 +238,45 @@ class handler(BaseHTTPRequestHandler):
                 self._send_error(400, "Job has no scoring criteria or requirements defined")
                 return
 
-            # Fetch candidates for this job via junction table
-            links = supabase_request(
-                f"job_candidates?job_id=eq.{job_id}&select=candidate_id,candidates(*)"
-            )
-            candidates = [link["candidates"] for link in (links or [])]
+            if candidate_id:
+                # Single candidate scoring
+                candidate = supabase_request(
+                    f"candidates?id=eq.{candidate_id}", single=True
+                )
 
-            if not candidates:
-                self._send_error(400, "No candidates found for this job")
-                return
+                # Delete existing score for this candidate + job
+                supabase_request(
+                    f"scores?job_id=eq.{job_id}&candidate_id=eq.{candidate_id}",
+                    method="DELETE",
+                )
 
-            # Delete existing scores for this job
-            supabase_request(f"scores?job_id=eq.{job_id}", method="DELETE")
+                score = self._score_candidate(
+                    candidate, criteria, requirements, description, job_id
+                )
+                self._send_json(200, score)
+            else:
+                # Bulk scoring — all candidates for this job
+                links = supabase_request(
+                    f"job_candidates?job_id=eq.{job_id}&select=candidate_id,candidates(*)"
+                )
+                candidates = [link["candidates"] for link in (links or [])]
 
-            # Calculate and insert scores
-            scores = []
-            for candidate in candidates:
-                # User-defined criteria score
-                criteria_score, breakdown = calculate_criteria_score(candidate, criteria)
+                if not candidates:
+                    self._send_error(400, "No candidates found for this job")
+                    return
 
-                # LLM relevance score
-                ai_score = 0
-                if requirements:
-                    try:
-                        ai_score = call_llm_relevance(
-                            candidate.get("raw_text", ""),
-                            description,
-                            requirements,
-                        )
-                    except Exception:
-                        ai_score = 0
+                # Delete existing scores for this job
+                supabase_request(f"scores?job_id=eq.{job_id}", method="DELETE")
 
-                breakdown["ai_relevance"] = ai_score
-
-                # Blended total: 60% criteria + 40% AI relevance
-                if criteria and requirements:
-                    total_score = round(
-                        (criteria_score * CRITERIA_WEIGHT + ai_score * AI_WEIGHT) / 100, 1
+                scores = []
+                for candidate in candidates:
+                    score = self._score_candidate(
+                        candidate, criteria, requirements, description, job_id
                     )
-                elif criteria:
-                    total_score = criteria_score
-                else:
-                    total_score = float(ai_score)
+                    scores.append(score)
 
-                score_data = {
-                    "candidate_id": candidate["id"],
-                    "job_id": job_id,
-                    "total_score": total_score,
-                    "breakdown": breakdown,
-                }
-                result = supabase_request("scores", method="POST", data=score_data)
-                if isinstance(result, list):
-                    scores.append(result[0])
-                else:
-                    scores.append(result)
-
-            # Sort by total_score descending
-            scores.sort(key=lambda s: s.get("total_score", 0), reverse=True)
-            self._send_json(200, scores)
+                scores.sort(key=lambda s: s.get("total_score", 0), reverse=True)
+                self._send_json(200, scores)
 
         except json.JSONDecodeError:
             self._send_error(400, "Invalid JSON")
@@ -302,6 +285,41 @@ class handler(BaseHTTPRequestHandler):
             self._send_error(e.code, error_body[:200])
         except Exception as e:
             self._send_error(500, str(e))
+
+    def _score_candidate(self, candidate, criteria, requirements, description, job_id):
+        """Score a single candidate and save to DB. Returns the score record."""
+        criteria_score, breakdown = calculate_criteria_score(candidate, criteria)
+
+        ai_score = 0
+        if requirements:
+            try:
+                ai_score = call_llm_relevance(
+                    candidate.get("raw_text", ""),
+                    description,
+                    requirements,
+                )
+            except Exception:
+                ai_score = 0
+
+        breakdown["ai_relevance"] = ai_score
+
+        if criteria and requirements:
+            total_score = round(
+                (criteria_score * CRITERIA_WEIGHT + ai_score * AI_WEIGHT) / 100, 1
+            )
+        elif criteria:
+            total_score = criteria_score
+        else:
+            total_score = float(ai_score)
+
+        score_data = {
+            "candidate_id": candidate["id"],
+            "job_id": job_id,
+            "total_score": total_score,
+            "breakdown": breakdown,
+        }
+        result = supabase_request("scores", method="POST", data=score_data)
+        return result[0] if isinstance(result, list) else result
 
     def _send_json(self, status, data):
         body = json.dumps(data).encode("utf-8")

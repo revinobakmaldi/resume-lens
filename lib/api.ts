@@ -97,3 +97,11 @@ export async function calculateScores(jobId: string): Promise<Score[]> {
     body: JSON.stringify({ job_id: jobId }),
   });
 }
+
+export async function scoreCandidate(jobId: string, candidateId: string): Promise<Score> {
+  return request("/api/score", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ job_id: jobId, candidate_id: candidateId }),
+  });
+}
