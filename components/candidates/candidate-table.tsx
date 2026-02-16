@@ -10,9 +10,14 @@ import type { CandidateWithScore } from "@/lib/types";
 interface CandidateTableProps {
   candidates: CandidateWithScore[];
   showJobLink?: boolean;
+  selectedIds?: Set<string>;
+  onToggleSelect?: (id: string) => void;
+  onToggleAll?: () => void;
 }
 
-export function CandidateTable({ candidates, showJobLink }: CandidateTableProps) {
+export function CandidateTable({ candidates, showJobLink, selectedIds, onToggleSelect, onToggleAll }: CandidateTableProps) {
+  const selectable = !!selectedIds && !!onToggleSelect && !!onToggleAll;
+  const allSelected = selectable && candidates.length > 0 && candidates.every((c) => selectedIds!.has(c.id));
   if (candidates.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 py-12 text-center">
@@ -31,6 +36,16 @@ export function CandidateTable({ candidates, showJobLink }: CandidateTableProps)
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
+            {selectable && (
+              <th className="w-10 px-4 py-3">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={onToggleAll}
+                  className="h-4 w-4 rounded border-zinc-300 dark:border-zinc-600 text-primary focus:ring-primary/50 cursor-pointer accent-[hsl(var(--primary))]"
+                />
+              </th>
+            )}
             <th className="px-4 py-3 text-left font-medium text-zinc-600 dark:text-zinc-400">
               Name
             </th>
@@ -63,8 +78,18 @@ export function CandidateTable({ candidates, showJobLink }: CandidateTableProps)
             <motion.tr
               key={candidate.id}
               variants={fadeInUp}
-              className="border-b border-zinc-100 dark:border-zinc-800/50 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/30"
+              className={`border-b border-zinc-100 dark:border-zinc-800/50 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/30 ${selectable && selectedIds!.has(candidate.id) ? "bg-primary/5 dark:bg-primary/10" : ""}`}
             >
+              {selectable && (
+                <td className="w-10 px-4 py-3">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds!.has(candidate.id)}
+                    onChange={() => onToggleSelect!(candidate.id)}
+                    className="h-4 w-4 rounded border-zinc-300 dark:border-zinc-600 text-primary focus:ring-primary/50 cursor-pointer accent-[hsl(var(--primary))]"
+                  />
+                </td>
+              )}
               <td className="px-4 py-3">
                 <Link
                   href={`/candidates/${candidate.id}`}

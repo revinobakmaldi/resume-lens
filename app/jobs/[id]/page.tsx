@@ -11,6 +11,7 @@ import {
   Trash2,
   Pencil,
   AlertCircle,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -38,6 +39,7 @@ export default function JobDetailPage() {
   const [scoreProgress, setScoreProgress] = useState({ current: 0, total: 0, name: "" });
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     async function load() {
@@ -67,21 +69,43 @@ export default function JobDetailPage() {
     return () => window.removeEventListener("beforeunload", handler);
   }, [scoring]);
 
+  const handleToggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const handleToggleAll = () => {
+    if (selectedIds.size === sortedCandidates.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(sortedCandidates.map((c) => c.id)));
+    }
+  };
+
   const handleScore = async () => {
+    const toScore = selectedIds.size > 0
+      ? candidates.filter((c) => selectedIds.has(c.id))
+      : candidates;
+
     setScoring(true);
     setError(null);
-    const total = candidates.length;
+    const total = toScore.length;
     setScoreProgress({ current: 0, total, name: "" });
 
     try {
-      for (let i = 0; i < candidates.length; i++) {
-        const c = candidates[i];
+      for (let i = 0; i < toScore.length; i++) {
+        const c = toScore[i];
         setScoreProgress({ current: i + 1, total, name: c.name || "Unknown" });
         await scoreCandidate(jobId, c.id);
       }
       // Reload candidates with new scores
       const updated = await getCandidates(jobId);
       setCandidates(updated);
+      setSelectedIds(new Set());
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to calculate scores");
     } finally {
@@ -273,6 +297,18 @@ export default function JobDetailPage() {
             </Link>
           </motion.div>
 
+          {selectedIds.size > 0 && (
+            <motion.div variants={scaleIn}>
+              <button
+                onClick={() => setSelectedIds(new Set())}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-xs font-medium text-zinc-500 transition-all hover:border-red-300 hover:bg-red-500/10 hover:text-red-400"
+              >
+                <X className="h-3 w-3" />
+                Clear selection ({selectedIds.size})
+              </button>
+            </motion.div>
+          )}
+
           <motion.div variants={scaleIn}>
             <button
               onClick={handleScore}
@@ -284,7 +320,9 @@ export default function JobDetailPage() {
               ) : (
                 <Calculator className="h-4 w-4" />
               )}
-              Calculate Scores
+              {selectedIds.size > 0
+                ? `Score Selected (${selectedIds.size})`
+                : "Calculate All Scores"}
             </button>
           </motion.div>
         </motion.div>
@@ -338,7 +376,12 @@ export default function JobDetailPage() {
             <CandidateFilters search={search} onSearchChange={setSearch} />
           )}
 
-          <CandidateTable candidates={sortedCandidates} />
+          <CandidateTable
+            candidates={sortedCandidates}
+            selectedIds={selectedIds}
+            onToggleSelect={handleToggleSelect}
+            onToggleAll={handleToggleAll}
+          />
         </div>
       </main>
       <Footer />
