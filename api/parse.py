@@ -96,7 +96,37 @@ def call_llm(resume_text):
             lines = lines[:-1]
         content = "\n".join(lines).strip()
 
-    return json.loads(content)
+    # Extract JSON object if surrounded by extra text
+    start = content.find("{")
+    end = content.rfind("}")
+    if start != -1 and end != -1:
+        content = content[start:end + 1]
+
+    # Try parsing; if truncated, attempt to repair
+    try:
+        return json.loads(content)
+    except json.JSONDecodeError:
+        # LLM may have returned truncated JSON — try to close open strings/braces
+        repaired = content
+        # Close any unterminated string
+        if repaired.count('"') % 2 != 0:
+            repaired += '"'
+        # Ensure trailing value for last key (null if missing)
+        if repaired.rstrip().endswith(":"):
+            repaired += " null"
+        # Close braces
+        open_braces = repaired.count("{") - repaired.count("}")
+        repaired += "}" * open_braces
+        try:
+            return json.loads(repaired)
+        except json.JSONDecodeError:
+            # Last resort: return nulls for all fields
+            return {
+                "name": None, "email": None, "phone": None,
+                "gender": None, "age": None, "last_education": None,
+                "last_company": None, "total_experience": None,
+                "related_experience": None,
+            }
 
 
 def parse_multipart(headers, body):
