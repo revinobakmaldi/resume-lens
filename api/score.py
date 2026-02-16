@@ -145,37 +145,16 @@ def call_llm_relevance(resume_text, job_description, requirements):
     if not resume_text:
         return 0
 
-    system_prompt = """You are a recruitment evaluator. Score how well a candidate's resume matches the job requirements.
+    system_prompt = """Return ONLY a JSON object: {"score": <0-100>, "reasoning": "<1 sentence>"}
+No thinking, no explanation, no markdown. Just the JSON."""
 
-Return ONLY a valid JSON object with these keys:
-{
-  "score": <integer 0-100>,
-  "reasoning": "<brief 1-2 sentence explanation>"
-}
+    user_prompt = f"""Score 0-100 how well this resume matches the requirements. Be direct.
 
-Scoring guide:
-- 90-100: Exceptional match — meets or exceeds all key requirements
-- 70-89: Strong match — meets most requirements with minor gaps
-- 50-69: Moderate match — meets some requirements but has notable gaps
-- 30-49: Weak match — meets few requirements
-- 0-29: Poor match — does not align with requirements
+Requirements: {requirements}
+Job: {job_description or "N/A"}
 
-RULES:
-1. Return ONLY raw JSON — no markdown, no code fences
-2. The resume may be in Indonesian or English — handle both
-3. Focus on technical skills, relevant experience, and qualifications
-4. Be objective and fair"""
-
-    user_prompt = f"""JOB DESCRIPTION:
-{job_description or "Not provided"}
-
-TECHNICAL REQUIREMENTS:
-{requirements}
-
-CANDIDATE RESUME:
-{resume_text[:6000]}
-
-Score this candidate's fit against the technical requirements."""
+Resume:
+{resume_text[:6000]}"""
 
     payload = json.dumps({
         "model": "qwen/qwen3-vl-235b-a22b-thinking",
