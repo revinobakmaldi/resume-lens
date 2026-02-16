@@ -10,11 +10,12 @@ import { CandidateTable } from "@/components/candidates/candidate-table";
 import { CandidateFilters } from "@/components/candidates/candidate-filters";
 import { fadeInUp } from "@/lib/animations";
 import { getCandidates } from "@/lib/api";
-import type { CandidateWithScore } from "@/lib/types";
+import type { CandidateWithScore, QueryFilter } from "@/lib/types";
 
 export default function CandidatesPage() {
   const [candidates, setCandidates] = useState<CandidateWithScore[]>([]);
   const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState<QueryFilter[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,14 +33,42 @@ export default function CandidatesPage() {
   }, []);
 
   const filtered = candidates.filter((c) => {
-    if (!search) return true;
-    const q = search.toLowerCase();
-    return (
-      c.name?.toLowerCase().includes(q) ||
-      c.email?.toLowerCase().includes(q) ||
-      c.last_company?.toLowerCase().includes(q) ||
-      c.last_education?.toLowerCase().includes(q)
-    );
+    if (search) {
+      const q = search.toLowerCase();
+      const matchesSearch =
+        c.name?.toLowerCase().includes(q) ||
+        c.email?.toLowerCase().includes(q) ||
+        c.last_company?.toLowerCase().includes(q) ||
+        c.last_education?.toLowerCase().includes(q);
+      if (!matchesSearch) return false;
+    }
+
+    for (const f of filters) {
+      if (!f.value) continue;
+
+      let fieldValue: string | number | null | undefined;
+      if (f.field === "score") {
+        fieldValue = c.score?.total_score ?? null;
+      } else if (f.field === "source") {
+        fieldValue = c.source;
+      } else {
+        fieldValue = (c as unknown as Record<string, unknown>)[f.field] as string | number | null;
+      }
+
+      if (fieldValue == null) return false;
+
+      if (f.operator === "gte") {
+        if (Number(fieldValue) < Number(f.value)) return false;
+      } else if (f.operator === "lte") {
+        if (Number(fieldValue) > Number(f.value)) return false;
+      } else if (f.operator === "eq") {
+        if (String(fieldValue).toLowerCase() !== String(f.value).toLowerCase()) return false;
+      } else if (f.operator === "contains") {
+        if (!String(fieldValue).toLowerCase().includes(String(f.value).toLowerCase())) return false;
+      }
+    }
+
+    return true;
   });
 
   return (
@@ -68,7 +97,12 @@ export default function CandidatesPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            <CandidateFilters search={search} onSearchChange={setSearch} />
+            <CandidateFilters
+              search={search}
+              onSearchChange={setSearch}
+              filters={filters}
+              onFiltersChange={setFilters}
+            />
             <CandidateTable candidates={filtered} showJobLink />
           </div>
         )}
