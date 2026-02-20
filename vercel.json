@@ -4,6 +4,7 @@
     { "source": "/api/parse", "destination": "/api/parse" },
     { "source": "/api/candidates", "destination": "/api/candidates" },
     { "source": "/api/jobs", "destination": "/api/jobs" },
-    { "source": "/api/score", "destination": "/api/score" }
+    { "source": "/api/score", "destination": "/api/score" },
+    { "source": "/api/share", "destination": "/api/share" }
   ]
 }

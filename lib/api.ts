@@ -1,5 +1,10 @@
 import type { Job, Candidate, Score, CandidateWithScore, ParsedCandidate } from "./types";
 
+export interface SharedJobData {
+  job: Omit<Job, "share_token" | "updated_at">;
+  candidates: CandidateWithScore[];
+}
+
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
   const res = await fetch(url, options);
   const data = await res.json();
@@ -87,6 +92,19 @@ export async function parseResume(file: File, jobId: string, source?: string): P
     method: "POST",
     body: formData,
   });
+}
+
+// Share
+export async function generateShareToken(jobId: string): Promise<{ share_token: string }> {
+  return request(`/api/share?job_id=${jobId}`, { method: "POST" });
+}
+
+export async function revokeShareToken(jobId: string): Promise<{ success: boolean }> {
+  return request(`/api/share?job_id=${jobId}`, { method: "DELETE" });
+}
+
+export async function getSharedJob(token: string): Promise<SharedJobData> {
+  return request(`/api/share?token=${encodeURIComponent(token)}`);
 }
 
 // Scores

@@ -4,6 +4,7 @@ export interface Job {
   description: string | null;
   requirements: string;
   criteria: Criterion[];
+  share_token: string | null;
   created_at: string;
   updated_at: string;
 }

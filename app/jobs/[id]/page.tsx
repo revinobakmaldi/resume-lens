@@ -13,6 +13,7 @@ import {
   AlertCircle,
   X,
 } from "lucide-react";
+import { ShareButton } from "@/components/jobs/share-button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/shared/navbar";
@@ -236,6 +237,7 @@ export default function JobDetailPage() {
               </p>
             </div>
             <div className="flex items-center gap-2">
+              <ShareButton jobId={jobId} initialToken={job.share_token ?? null} />
               <Link
                 href={`/jobs/${jobId}/edit`}
                 className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-sm text-zinc-600 dark:text-zinc-400 transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-primary"

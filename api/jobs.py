@@ -102,7 +102,7 @@ class handler(BaseHTTPRequestHandler):
             body = self.rfile.read(content_length)
             data = json.loads(body.decode("utf-8"))
 
-            allowed = {"title", "description", "requirements", "criteria"}
+            allowed = {"title", "description", "requirements", "criteria", "share_token"}
             update_data = {k: v for k, v in data.items() if k in allowed}
 
             if not update_data:
