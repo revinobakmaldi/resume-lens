@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Lock, Loader2, AlertCircle, ScanSearch } from "lucide-react";
+import { Lock, Loader2, AlertCircle, ScanSearch, PlayCircle } from "lucide-react";
 import { fadeInUp } from "@/lib/animations";
 import { verifyPassword } from "@/lib/api";
 import { setAuthenticated } from "@/lib/auth";
@@ -95,6 +95,16 @@ export function PasswordGate() {
             )}
           </button>
         </form>
+
+        <a
+          href="https://resume-lens-apps.vercel.app/share/0f52f9ec-6933-471d-a633-5c41d72b692e"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-amber-400 px-4 py-3 font-medium text-amber-900 transition-colors hover:bg-amber-300"
+        >
+          <PlayCircle className="h-4 w-4" />
+          See Live Demo
+        </a>
       </motion.div>
     </div>
   );
