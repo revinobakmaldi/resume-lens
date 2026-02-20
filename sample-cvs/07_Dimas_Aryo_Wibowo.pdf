@@ -1,0 +1,73 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 5 0 R /Resources << /Font << /F1 4 0 R >> >> >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 1077 >>
+stream
+BT
+/F1 11 Tf
+50 780 Td
+14 TL
+/F1 14 Tf
+(DIMAS ARYO WIBOWO) Tj
+/F1 11 Tf
+T*
+() Tj T*
+(Email  : dimas.aryo@email.com) Tj T*
+(Phone  : +62 823-9900-1122) Tj T*
+(Gender : Male) Tj T*
+(Age    : 27) Tj T*
+() Tj T*
+/F1 12 Tf
+(EDUCATION) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(S1 Teknik Informatika - Universitas Dian Nuswantoro \(2020\)) Tj T*
+() Tj T*
+/F1 12 Tf
+(WORK EXPERIENCE) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(Backend Engineer | Blibli.com) Tj T*
+(Mar 2020 - Present \(4 years\)) Tj T*
+(  - Built inventory and logistics APIs using Python/FastAPI) Tj T*
+(  - Wrote complex PostgreSQL queries and managed database migrations) Tj T*
+(  - Containerized applications with Docker and deployed on AWS) Tj T*
+(  - Implemented JWT authentication for partner API access) Tj T*
+(  - Set up Kafka consumers for real-time stock update events) Tj T*
+() Tj T*
+/F1 12 Tf
+(SKILLS) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(Python, FastAPI, PostgreSQL, Docker, AWS, Kafka, JWT, Redis, Git,) Tj T*
+(CI/CD) Tj T*
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1440
+%%EOF

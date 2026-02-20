@@ -1,0 +1,73 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 5 0 R /Resources << /Font << /F1 4 0 R >> >> >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 1078 >>
+stream
+BT
+/F1 11 Tf
+50 780 Td
+14 TL
+/F1 14 Tf
+(SITI RAHMA DEWI) Tj
+/F1 11 Tf
+T*
+() Tj T*
+(Email  : siti.rahma@email.com) Tj T*
+(Phone  : +62 821-9988-7766) Tj T*
+(Gender : Female) Tj T*
+(Age    : 26) Tj T*
+() Tj T*
+/F1 12 Tf
+(EDUCATION) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(S1 Ilmu Komputer - Institut Teknologi Bandung \(2020\)) Tj T*
+() Tj T*
+/F1 12 Tf
+(WORK EXPERIENCE) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(Software Engineer - Backend | Gojek) Tj T*
+(Aug 2020 - Present \(3.5 years\)) Tj T*
+(  - Developed Go microservices for ride-matching engine) Tj T*
+(  - Worked with PostgreSQL and wrote complex analytical queries) Tj T*
+(  - Containerized services using Docker and deployed on GCP Kubernetes) Tj T*
+(  - Integrated OAuth2 for third-party app authentication) Tj T*
+(  - Used Kafka for async event processing between services) Tj T*
+() Tj T*
+/F1 12 Tf
+(SKILLS) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(Go, Python, PostgreSQL, Docker, Kubernetes, GCP, Kafka, OAuth2, Git,) Tj T*
+(CI/CD) Tj T*
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1441
+%%EOF

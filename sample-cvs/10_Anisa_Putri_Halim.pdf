@@ -1,0 +1,73 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 5 0 R /Resources << /Font << /F1 4 0 R >> >> >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 1128 >>
+stream
+BT
+/F1 11 Tf
+50 780 Td
+14 TL
+/F1 14 Tf
+(ANISA PUTRI HALIM) Tj
+/F1 11 Tf
+T*
+() Tj T*
+(Email  : anisa.putri@email.com) Tj T*
+(Phone  : +62 838-7788-9900) Tj T*
+(Gender : Female) Tj T*
+(Age    : 25) Tj T*
+() Tj T*
+/F1 12 Tf
+(EDUCATION) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(S1 Teknik Informatika - Institut Teknologi Sepuluh Nopember \(2022\)) Tj T*
+() Tj T*
+/F1 12 Tf
+(WORK EXPERIENCE) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(Junior Backend Engineer | Tiket.com) Tj T*
+(Sep 2022 - Present \(1.5 years\)) Tj T*
+(  - Developed REST APIs in Python/FastAPI for flight search and booking) Tj T*
+(  - Wrote PostgreSQL queries and participated in schema design discussions) Tj T*
+(  - Used Docker for local development and staging environments) Tj T*
+(  - Implemented basic JWT authentication for API endpoints) Tj T*
+(  - Wrote unit tests and participated in CI/CD setup using GitHub Actions) Tj T*
+() Tj T*
+/F1 12 Tf
+(SKILLS) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(Python, FastAPI, PostgreSQL, Docker, JWT, GitHub Actions, Git, REST) Tj T*
+(API) Tj T*
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1491
+%%EOF
