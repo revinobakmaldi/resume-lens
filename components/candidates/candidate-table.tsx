@@ -18,9 +18,10 @@ interface CandidateTableProps {
   selectedIds?: Set<string>;
   onToggleSelect?: (id: string) => void;
   onToggleAll?: () => void;
+  readOnly?: boolean;
 }
 
-export function CandidateTable({ candidates, showJobLink, experienceField = "total_experience", selectedIds, onToggleSelect, onToggleAll }: CandidateTableProps) {
+export function CandidateTable({ candidates, showJobLink, experienceField = "total_experience", selectedIds, onToggleSelect, onToggleAll, readOnly }: CandidateTableProps) {
   const [sortField, setSortField] = useState<SortField>("score");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
 
@@ -147,8 +148,10 @@ export function CandidateTable({ candidates, showJobLink, experienceField = "tot
             <th className={thClass} onClick={() => handleSort("score")}>
               Score<SortIcon field="score" />
             </th>
-            <th className="px-4 py-3 text-left font-medium text-zinc-600 dark:text-zinc-400">
-            </th>
+            {!readOnly && (
+              <th className="px-4 py-3 text-left font-medium text-zinc-600 dark:text-zinc-400">
+              </th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -211,14 +214,16 @@ export function CandidateTable({ candidates, showJobLink, experienceField = "tot
                   <span className="text-zinc-400">{"\u2014"}</span>
                 )}
               </td>
-              <td className="px-4 py-3">
-                <Link
-                  href={`/candidates/${candidate.id}/edit`}
-                  className="inline-flex rounded-lg border border-zinc-200 dark:border-zinc-700 p-1.5 text-zinc-400 transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
-                >
-                  <Pencil className="h-3.5 w-3.5" />
-                </Link>
-              </td>
+              {!readOnly && (
+                <td className="px-4 py-3">
+                  <Link
+                    href={`/candidates/${candidate.id}/edit`}
+                    className="inline-flex rounded-lg border border-zinc-200 dark:border-zinc-700 p-1.5 text-zinc-400 transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
+                  >
+                    <Pencil className="h-3.5 w-3.5" />
+                  </Link>
+                </td>
+              )}
             </motion.tr>
           ))}
         </tbody>
