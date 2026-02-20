@@ -1,0 +1,79 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 5 0 R /Resources << /Font << /F1 4 0 R >> >> >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 1393 >>
+stream
+BT
+/F1 11 Tf
+50 780 Td
+14 TL
+/F1 14 Tf
+(CLARA NATASHA) Tj
+/F1 11 Tf
+T*
+() Tj T*
+(Email  : clara.natasha@email.com) Tj T*
+(Phone  : +62 856-3344-5566) Tj T*
+(Gender : Female) Tj T*
+(Age    : 30) Tj T*
+() Tj T*
+/F1 12 Tf
+(EDUCATION) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(S1 Ilmu Komputer - Universitas Pelita Harapan \(2016\)) Tj T*
+() Tj T*
+/F1 12 Tf
+(WORK EXPERIENCE) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(API Developer | Bank BCA \(Digital Division\)) Tj T*
+(Jan 2020 - Present \(4 years\)) Tj T*
+(  - Developed banking APIs in Java/Spring Boot for mobile banking platform) Tj T*
+(  - Managed Oracle and PostgreSQL databases with strict data integrity requirements) Tj T*
+(  - Implemented OAuth2 and JWT for customer-facing API security) Tj T*
+(  - Deployed services on Azure using AKS and Docker) Tj T*
+(  - Built automated pipelines with Azure DevOps) Tj T*
+() Tj T*
+(Software Engineer | Accenture Indonesia) Tj T*
+(2016 - 2020 \(4 years\)) Tj T*
+(  - Built enterprise backend systems using Java/Spring) Tj T*
+(  - Worked with Oracle DB and wrote stored procedures) Tj T*
+(  - Participated in agile sprints and code reviews) Tj T*
+() Tj T*
+/F1 12 Tf
+(SKILLS) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(Java, Spring Boot, PostgreSQL, Oracle, OAuth2, JWT, Docker, Azure,) Tj T*
+(Kubernetes, Azure DevOps) Tj T*
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1756
+%%EOF

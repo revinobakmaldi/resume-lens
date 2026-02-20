@@ -1,0 +1,78 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 5 0 R /Resources << /Font << /F1 4 0 R >> >> >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 1371 >>
+stream
+BT
+/F1 11 Tf
+50 780 Td
+14 TL
+/F1 14 Tf
+(ANDI PRATAMA) Tj
+/F1 11 Tf
+T*
+() Tj T*
+(Email  : andi.pratama@email.com) Tj T*
+(Phone  : +62 812-3456-7890) Tj T*
+(Gender : Male) Tj T*
+(Age    : 29) Tj T*
+() Tj T*
+/F1 12 Tf
+(EDUCATION) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(S1 Teknik Informatika - Universitas Indonesia \(2018\)) Tj T*
+() Tj T*
+/F1 12 Tf
+(WORK EXPERIENCE) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(Backend Engineer | Tokopedia) Tj T*
+(Jan 2021 - Present \(3 years\)) Tj T*
+(  - Built high-throughput order processing service in Python/FastAPI handling 50k req/min) Tj T*
+(  - Designed PostgreSQL schemas and wrote optimized queries for inventory management) Tj T*
+(  - Deployed microservices on AWS ECS with Docker, set up CI/CD via GitHub Actions) Tj T*
+(  - Implemented JWT-based auth for internal APIs) Tj T*
+() Tj T*
+(Junior Backend Developer | Bukalapak) Tj T*
+(Jul 2018 - Dec 2020 \(2.5 years\)) Tj T*
+(  - Developed REST APIs in Node.js/Express for seller dashboard) Tj T*
+(  - Maintained MySQL databases and wrote migration scripts) Tj T*
+(  - Integrated Redis for caching product listing pages) Tj T*
+() Tj T*
+/F1 12 Tf
+(SKILLS) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(Python, FastAPI, Node.js, PostgreSQL, MySQL, Redis, Docker, AWS, Git,) Tj T*
+(JWT, GitHub Actions) Tj T*
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1734
+%%EOF

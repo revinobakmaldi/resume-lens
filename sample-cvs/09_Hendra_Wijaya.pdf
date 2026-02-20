@@ -1,0 +1,76 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 5 0 R /Resources << /Font << /F1 4 0 R >> >> >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 1108 >>
+stream
+BT
+/F1 11 Tf
+50 780 Td
+14 TL
+/F1 14 Tf
+(HENDRA WIJAYA) Tj
+/F1 11 Tf
+T*
+() Tj T*
+(Email  : hendra.wijaya@email.com) Tj T*
+(Phone  : +62 811-2233-4455) Tj T*
+(Gender : Male) Tj T*
+(Age    : 33) Tj T*
+() Tj T*
+/F1 12 Tf
+(EDUCATION) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(S1 Teknik Elektro - Universitas Trisakti \(2013\)) Tj T*
+() Tj T*
+/F1 12 Tf
+(WORK EXPERIENCE) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(IT Backend Developer | Indosat Ooredoo) Tj T*
+(2016 - Present \(8 years\)) Tj T*
+(  - Maintained legacy telecom billing APIs in PHP/Lumen) Tj T*
+(  - Managed large MySQL databases for subscriber data) Tj T*
+(  - Basic Docker usage for local environments) Tj T*
+(  - Wrote Python scripts for data migration and reporting) Tj T*
+() Tj T*
+(Web Developer | Freelance) Tj T*
+(2013 - 2016) Tj T*
+(  - Built PHP/MySQL websites for small businesses) Tj T*
+(  - Basic REST API development) Tj T*
+() Tj T*
+/F1 12 Tf
+(SKILLS) Tj
+/F1 11 Tf
+T*
+(----------------------------------------) Tj T*
+(PHP, Lumen, MySQL, Python \(scripting\), Docker \(basic\), Git) Tj T*
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1471
+%%EOF
