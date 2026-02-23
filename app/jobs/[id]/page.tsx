@@ -42,6 +42,7 @@ export default function JobDetailPage() {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [showUngradedOnly, setShowUngradedOnly] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -88,10 +89,12 @@ export default function JobDetailPage() {
     }
   };
 
-  const handleScore = async () => {
-    const toScore = selectedIds.size > 0
-      ? candidates.filter((c) => selectedIds.has(c.id))
-      : candidates;
+  const handleScore = async (override?: CandidateWithScore[]) => {
+    const toScore = override
+      ? override
+      : selectedIds.size > 0
+        ? candidates.filter((c) => selectedIds.has(c.id))
+        : candidates;
 
     setScoring(true);
     setError(null);
@@ -128,7 +131,12 @@ export default function JobDetailPage() {
     }
   };
 
+  const ungradedCount = candidates.filter((c) => !c.score).length;
+
   const filteredCandidates = candidates.filter((c) => {
+    // Ungraded-only toggle
+    if (showUngradedOnly && c.score) return false;
+
     // Text search
     if (search) {
       const q = search.toLowerCase();
@@ -337,7 +345,7 @@ export default function JobDetailPage() {
 
           <motion.div variants={scaleIn}>
             <button
-              onClick={handleScore}
+              onClick={() => handleScore()}
               disabled={scoring || candidates.length === 0}
               className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-2 text-sm font-medium text-foreground transition-all hover:border-secondary/30 hover:bg-secondary/10 hover:text-secondary disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -351,6 +359,23 @@ export default function JobDetailPage() {
                 : "Calculate All Scores"}
             </button>
           </motion.div>
+
+          {ungradedCount > 0 && (
+            <motion.div variants={scaleIn}>
+              <button
+                onClick={() => handleScore(candidates.filter((c) => !c.score))}
+                disabled={scoring}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-amber-200 dark:border-amber-700/50 bg-amber-50 dark:bg-amber-900/20 px-4 py-2 text-sm font-medium text-amber-700 dark:text-amber-400 transition-all hover:border-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/40 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {scoring ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Calculator className="h-4 w-4" />
+                )}
+                Score Ungraded ({ungradedCount})
+              </button>
+            </motion.div>
+          )}
         </motion.div>
 
         {/* Scoring Progress */}
@@ -393,11 +418,30 @@ export default function JobDetailPage() {
         {/* Candidates */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-foreground">
-              Candidates ({filteredCandidates.length !== candidates.length
-                ? `${filteredCandidates.length} / ${candidates.length}`
-                : candidates.length})
-            </h2>
+            <div className="flex items-center gap-3">
+              <h2 className="text-lg font-semibold text-foreground">
+                Candidates ({filteredCandidates.length !== candidates.length
+                  ? `${filteredCandidates.length} / ${candidates.length}`
+                  : candidates.length})
+              </h2>
+              {ungradedCount > 0 && (
+                <span className="inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-400">
+                  {ungradedCount} ungraded
+                </span>
+              )}
+            </div>
+            {ungradedCount > 0 && (
+              <button
+                onClick={() => setShowUngradedOnly((v) => !v)}
+                className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
+                  showUngradedOnly
+                    ? "border-amber-400 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400"
+                    : "border-zinc-200 dark:border-zinc-700 text-zinc-500 hover:border-amber-300 hover:text-amber-600 dark:hover:text-amber-400"
+                }`}
+              >
+                {showUngradedOnly ? "Show all" : "Ungraded only"}
+              </button>
+            )}
           </div>
 
           {candidates.length > 0 && (
